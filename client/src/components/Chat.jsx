@@ -22,7 +22,6 @@ import { useApp } from 'src/context/AppContext';
 
 import useChatUtils from 'src/lib/chat';
 import MessageStatus from './MessageStatus';
-//  T import listOfBadWordsNotAllowed from 'src/lib/badWords';
 import { useNotification } from 'src/lib/notification';
 import { NEW_EVENT_DELETE_MESSAGE, NEW_EVENT_EDIT_MESSAGE, NEW_EVENT_RECEIVE_MESSAGE, NEW_EVENT_TYPING } from '../../../constants.json';
 import { createBrowserNotification } from 'src/lib/browserNotification';
@@ -232,17 +231,13 @@ const Chat = () => {
 
         // Bad Words process here.
         const en = require('bad-words-next/data/en.json')
-        
+
         const badWords = new BadWordsNext({ data: en })
         // This badwords.add(en)
 
         const splitMessage = message.split(' ');
         for (const word of splitMessage) {
-            // TODO: We need a better way to implement this
-            // if (listOfBadWordsNotAllowed.includes(word)) {
-            //     message = 'Warning Message: send a warning to users';
-            // }
-            console.log('something cookins')
+
             if (badWords.includes(word)) {
                 message = 'Warning Message: send a warning to users';
             }
