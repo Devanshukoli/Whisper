@@ -22,10 +22,11 @@ import { useApp } from 'src/context/AppContext';
 
 import useChatUtils from 'src/lib/chat';
 import MessageStatus from './MessageStatus';
-import listOfBadWordsNotAllowed from 'src/lib/badWords';
+//  T import listOfBadWordsNotAllowed from 'src/lib/badWords';
 import { useNotification } from 'src/lib/notification';
 import { NEW_EVENT_DELETE_MESSAGE, NEW_EVENT_EDIT_MESSAGE, NEW_EVENT_RECEIVE_MESSAGE, NEW_EVENT_TYPING } from '../../../constants.json';
 import { createBrowserNotification } from 'src/lib/browserNotification';
+import BadWordsNext from 'bad-words-next';
 
 let senderId;
 const Chat = () => {
@@ -190,7 +191,7 @@ const Chat = () => {
     };
 
     const warningMessage = (sender, message) => {
-        // TODO: Instrad of replacing the message we should add some kind of increment for the users to decide to see the message or not
+        // TODO: Instead of replacing the message we should add some kind of increment for the users to decide to see the message or not
         if (message.includes('Warning Message')) {
             if (senderId === sender) {
                 return (
@@ -228,12 +229,24 @@ const Chat = () => {
 
         setIsQuoteReply(false)
 
+
+        // Bad Words process here.
+        const en = require('bad-words-next/data/en.json')
+        
+        const badWords = new BadWordsNext({ data: en })
+        // This badwords.add(en)
+
         const splitMessage = message.split(' ');
         for (const word of splitMessage) {
             // TODO: We need a better way to implement this
-            if (listOfBadWordsNotAllowed.includes(word)) {
+            // if (listOfBadWordsNotAllowed.includes(word)) {
+            //     message = 'Warning Message: send a warning to users';
+            // }
+            console.log('something cookins')
+            if (badWords.includes(word)) {
                 message = 'Warning Message: send a warning to users';
             }
+
         }
 
         if (editing.isediting === true) {
@@ -369,6 +382,7 @@ const Chat = () => {
         };
     }, [editing]);
 
+    // Here, New message , delete message and edit message are handled.
     useEffect(() => {
         const newMessageHandler = (message) => {
             try {
