@@ -217,7 +217,7 @@ const Chat = () => {
         const d = new Date();
         let message = inputRef.current.value.trim();        // Trim the message to remove the extra spaces
 
-        if (!isQuoteReply) {
+        if (!isQuoteReply || !isQuoteReply.length > 0) {
             const cleanedText = message.replace(/>+/g, '');
             message = cleanedText
         }
