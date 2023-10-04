@@ -189,8 +189,34 @@ const Chat = () => {
         }
     };
 
+    // Const warningMessage = (sender, message) => {
+    //     // TODO: Instead of replacing the message we should add some kind of increment for the users to decide to see the message or not
+    //     if (message.includes('Warning Message')) {
+    //         if (senderId === sender) {
+    //             return (
+    //                 <span className="text-red">
+    //                     ADMIN MESSAGE: You are trying to send a bad word!
+    //                 </span>
+    //             );
+    //         } else {
+    //             return (
+    //                 <span className="text-black">
+    //                     ADMIN MESSAGE: The person you are chatting with is
+    //                     trying to send a bad word!
+    //                 </span>
+    //             );
+    //         }
+    //     }
+    // };
+
+
+    // Bad Words handling process here.
+    const en = require('bad-words-next/data/en.json')
+
+    const badWords = new BadWordsNext({ data: en })
+    // This badwords.add(en)
+
     const warningMessage = (sender, message) => {
-        // TODO: Instead of replacing the message we should add some kind of increment for the users to decide to see the message or not
         if (message.includes('Warning Message')) {
             if (senderId === sender) {
                 return (
@@ -201,13 +227,59 @@ const Chat = () => {
             } else {
                 return (
                     <span className="text-black">
-                        ADMIN MESSAGE: The person you are chatting with is
-                        trying to send a bad word!
+                        ADMIN MESSAGE: The person you are chatting with is trying
+                        to send a bad word!
                     </span>
                 );
             }
+        } else {
+            const splitMessage = message.split(' ');
+            let containsBadWord = false;
+
+            for (let i = 0; i < splitMessage.length; i++) {
+                const word = splitMessage[i];
+
+                if (badWords.includes(word)) {
+                    containsBadWord = true;
+                    break; // Exit the loop as soon as a bad word is found.
+                }
+            }
+
+            if (containsBadWord) {
+                // Append the warning message to the original message.
+                return (
+                    <span>
+                        {message}
+                        <br />
+                        <span className="text-red">
+                            ADMIN MESSAGE: Warning - The message contains bad
+                            words!
+                        </span>
+                    </span>
+                );
+            } else {
+                // No bad words detected, return the original message.
+                return message;
+            }
         }
     };
+
+
+
+    // // Bad Words handling process here.
+    // const en = require('bad-words-next/data/en.json')
+
+    // const badWords = new BadWordsNext({ data: en })
+    // // This badwords.add(en)
+
+    // const splitMessage = message.split(' ');
+    // for (const word of splitMessage) {
+
+    //     if (badWords.includes(word)) {
+    //         message = 'Warning Message: send a warning to users';
+    //     }
+
+    // }
 
     // Here whenever user will submit message it will be send to the server
     const handleSubmit = async (e) => {
@@ -227,22 +299,6 @@ const Chat = () => {
         }
 
         setIsQuoteReply(false)
-
-
-        // Bad Words process here.
-        const en = require('bad-words-next/data/en.json')
-
-        const badWords = new BadWordsNext({ data: en })
-        // This badwords.add(en)
-
-        const splitMessage = message.split(' ');
-        for (const word of splitMessage) {
-
-            if (badWords.includes(word)) {
-                message = 'Warning Message: send a warning to users';
-            }
-
-        }
 
         if (editing.isediting === true) {
             try {
