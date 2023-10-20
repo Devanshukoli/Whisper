@@ -26,6 +26,7 @@ import { useNotification } from 'src/lib/notification';
 import { NEW_EVENT_DELETE_MESSAGE, NEW_EVENT_EDIT_MESSAGE, NEW_EVENT_RECEIVE_MESSAGE, NEW_EVENT_TYPING } from '../../../constants.json';
 import { createBrowserNotification } from 'src/lib/browserNotification';
 import BadWordsNext from 'bad-words-next';
+import en from 'bad-words-next/data/en.json';
 
 let senderId;
 const Chat = () => {
@@ -211,7 +212,9 @@ const Chat = () => {
 
 
     // Bad Words handling process here.
-    const en = require('bad-words-next/data/en.json')
+    // const en = require('bad-words-next/data/en.json')
+    
+
 
     const badWords = new BadWordsNext({ data: en })
     // This badwords.add(en)
